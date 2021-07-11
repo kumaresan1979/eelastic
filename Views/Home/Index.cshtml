@@ -1,0 +1,27 @@
+﻿@model appathon_component.Models.Product
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Product Page</h3>
+<table border="1" class="table table-bordered table-responsive">
+    <thead>
+        <tr class="btn-primary">
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Product Type</th>
+            <th>Quantity</th>
+            <th>ProductImage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.ProductId</td>
+            <td>@Model.ProductName</td>
+            <td>@Model.ProductType</td>
+            <td>@Model.Quantity</td>
+            <td>@Model.ProductImage</td>
+        </tr>
+    </tbody>
+</table>
