@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using FFImageLoading;
 using Elasticsearch.Net;
 using Nest.Specification;
+using appathon_component.Models.Request;
+using System.Configuration;
 
 namespace appathon_component.Controllers
 {
@@ -20,7 +22,8 @@ namespace appathon_component.Controllers
     {
         ImageService imageService = new ImageService();
         //CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=myteststorage2021;AccountKey=4MLvpT3UvxrjeG6I7NYjaKGlYHqpPbfdmPpkgyXKGR6nQ8qgd4k9XMC5Q+aY51l1m4Ja2S4tatlrgzY7TBvyQw==;EndpointSuffix=core.windows.net");
-
+        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
         public ActionResult Index()
         {
             Product product = Product.GetProduct();
@@ -33,6 +36,18 @@ namespace appathon_component.Controllers
         {
             var imageUrl = await imageService.UploadImageAsync(photo);
             prod.ProductImage = imageUrl;
+            var request = new AddSearchRequest { 
+                id = 1,
+                url = "",
+                author = "",
+                datePublished= indianTime,
+                publishedDate  = "",
+                rate= 1,
+                ratedBy =0,
+                title = prod.ProductName
+            };
+            string url = string.Concat( ConfigurationManager.AppSettings["ApiBaseUrl"].ToString() , "/" ,ConfigurationManager.AppSettings["All"].ToString(),"/", prod.ProductName.ToLower());
+            ApiCall.apiCall(url, "POST", request);
             return RedirectToAction("Upload");
 
         }

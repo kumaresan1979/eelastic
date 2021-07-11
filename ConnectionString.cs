@@ -28,9 +28,9 @@ namespace appathon_component
                 string responseStr;
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["baseaddress"].ToString());
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString());
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", ConfigurationManager.AppSettings["R_UserName"].ToString(), ConfigurationManager.AppSettings["R_Password"].ToString()))));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", ConfigurationManager.AppSettings["UserName"].ToString(), ConfigurationManager.AppSettings["Password"].ToString()))));
                     if (method == "POST")
                     {
                         var response = client.PostAsJsonAsync(apiUrl, data).Result;
