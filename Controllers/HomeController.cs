@@ -34,21 +34,26 @@ namespace appathon_component.Controllers
         [HttpPost]
         public async Task<ActionResult> Upload(HttpPostedFileBase photo, Product prod)
         {
-            var imageUrl = await imageService.UploadImageAsync(photo);
+            // photo.FileName = prod.ProductName;
+            //string myFilePath = @"C:\MyFile.txt";
+          //  string extv = Path.GetExtension(photo.FileName);
+            prod.exten = Path.GetExtension(photo.FileName);
+            var imageUrl = await imageService.UploadImageAsync(photo, prod);
             prod.ProductImage = imageUrl;
             var request = new AddSearchRequest
             {
-                id = 1,
+                id = prod.ProductId,
                 url = "",
-                author = "",
+                brand = "",
                 datePublished = indianTime,
-                publishedDate = "",
+                publishedDate = indianTime,
                 rate = 1,
                 ratedBy = 0,
-                title = Path.GetFileNameWithoutExtension(photo.FileName)
+                title = prod.ProductName,
+                 exten = prod.exten
             };
-            string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["All"].ToString(), "/", prod.ProductName.ToLower());
-            ApiCall.apiCall(url, "POST", request);
+            string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["IndexName"].ToString(), "/",   ConfigurationManager.AppSettings["All"].ToString(), "/", prod.ProductId.ToString().ToLower());
+           var responce = ApiCall.apiCall(url, "POST", request);
             return RedirectToAction("Upload");
 
         }

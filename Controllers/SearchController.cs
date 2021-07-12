@@ -1,5 +1,7 @@
-﻿using System;
+﻿using appathon_component.Models.Request;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -29,10 +31,25 @@ namespace appathon_component.Controllers
                 new City {Id=7,Name="New Delhi" }
 
             };
-            //Searching records from list using LINQ query  
+            SearchModel searchModel = new SearchModel();
+            Query qi = new Query();
+            QueryString qstr = new QueryString();
+            // Match match =. new Match();
+            qstr.query = "*"+ Prefix+ "*";
+            qstr.default_field = "title";
+            qi.query_string = qstr;
+            searchModel.query = qi;
+            string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["IndexName"].ToString(), "/", ConfigurationManager.AppSettings["search"].ToString(), "/");
+            var responce = ApiCall.apiCall(url, "POST", searchModel);
+            
+
+            // Searching records from list using LINQ query
             var Name = (from N in ObjList
                         where N.Name.ToLower().Contains(Prefix.ToLower())
                         select new { N.Name });
+            //string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["All"].ToString(), "/", prod.ProductName.ToLower());
+            //ApiCall.apiCall(url, "POST", request);
+
             return Json(Name, JsonRequestBehavior.AllowGet);
         }
 

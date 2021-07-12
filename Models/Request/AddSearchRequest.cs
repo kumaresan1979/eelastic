@@ -10,11 +10,12 @@ namespace appathon_component.Models.Request
         public int id { get; set; }
         public string url { get; set; }
         public string title { get; set; }
-        public string author { get; set; }
+        public string brand { get; set; }
         public int rate { get; set; }
         public int ratedBy { get; set; }
+        public string exten { get; set; }
         public DateTime datePublished { get; set; }
-        public string publishedDate { get; set; }
+        public DateTime publishedDate { get; set; }
 
     }
 }

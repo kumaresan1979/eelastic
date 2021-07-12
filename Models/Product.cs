@@ -13,7 +13,7 @@ namespace appathon_component.Models
         public string ProductType { get; set; }
         public int Quantity { get; set; }
         public string ProductImage { get; set; }
-
+        public string exten { get; set; }
         public static Product GetProduct()
         {
             Product product = new Product() ;

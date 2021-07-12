@@ -228,6 +228,7 @@
     <Compile Include="Models\ImageBlob.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Request\AddSearchRequest.cs" />
+    <Compile Include="Models\Request\SearchModel.cs" />
     <Compile Include="Models\Response\SearchResponse.cs" />
     <Compile Include="Models\SearchRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

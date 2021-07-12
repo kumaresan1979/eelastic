@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure;
+﻿using appathon_component.Models;
+using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -16,7 +17,7 @@ namespace appathon_component
         static string strContainer = CloudConfigurationManager.GetSetting("ContainerName");
         static string strLocalPath = CloudConfigurationManager.GetSetting("LocalPath");
 
-        public async Task<string> UploadImageAsync(HttpPostedFileBase imageToUpload)
+        public async Task<string> UploadImageAsync(HttpPostedFileBase imageToUpload, Product prod)
         {
             string imageFullPath = null;
             if (imageToUpload == null || imageToUpload.ContentLength == 0)
@@ -38,7 +39,7 @@ namespace appathon_component
                         }
                         );
                 }
-                string imageName = imageToUpload.FileName;
+                string imageName = prod.ProductName+prod.exten;
                 CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(imageName);
                 cloudBlockBlob.Properties.ContentType = imageToUpload.ContentType;
                 await cloudBlockBlob.UploadFromStreamAsync(imageToUpload.InputStream);
