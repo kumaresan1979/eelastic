@@ -30,23 +30,24 @@ namespace appathon_component.Controllers
             return View(product);
         }
 
-       
+
         [HttpPost]
         public async Task<ActionResult> Upload(HttpPostedFileBase photo, Product prod)
         {
             var imageUrl = await imageService.UploadImageAsync(photo);
             prod.ProductImage = imageUrl;
-            var request = new AddSearchRequest { 
+            var request = new AddSearchRequest
+            {
                 id = 1,
                 url = "",
                 author = "",
-                datePublished= indianTime,
-                publishedDate  = "",
-                rate= 1,
-                ratedBy =0,
-                title = prod.ProductName
+                datePublished = indianTime,
+                publishedDate = "",
+                rate = 1,
+                ratedBy = 0,
+                title = Path.GetFileNameWithoutExtension(photo.FileName)
             };
-            string url = string.Concat( ConfigurationManager.AppSettings["ApiBaseUrl"].ToString() , "/" ,ConfigurationManager.AppSettings["All"].ToString(),"/", prod.ProductName.ToLower());
+            string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["All"].ToString(), "/", prod.ProductName.ToLower());
             ApiCall.apiCall(url, "POST", request);
             return RedirectToAction("Upload");
 
@@ -55,7 +56,7 @@ namespace appathon_component.Controllers
         public ActionResult Upload(Product pro)
         {
             List<appathon_component.Models.ImageBlob> blobs = new List<appathon_component.Models.ImageBlob>();
-            blobs= imageService.ListAll();
+            blobs = imageService.ListAll();
             ViewData["blobs"] = blobs;
             return View();
         }
@@ -89,8 +90,8 @@ namespace appathon_component.Controllers
 
             return View();
         }
-      
 
-         
+
+
     }
 }
