@@ -47,7 +47,7 @@ namespace appathon_component.Models.Response
         public double _score { get; set; }
         public Source _source { get; set; }
         public Total total { get; set; }
-        public double max_score { get; set; }
+        public double? max_score { get; set; }
         public List<Hit> hits { get; set; }
     }
 

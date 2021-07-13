@@ -1,4 +1,6 @@
 ﻿using appathon_component.Models.Request;
+using appathon_component.Models.Response;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -17,7 +19,7 @@ namespace appathon_component.Controllers
         }
 
         [HttpPost]
-        public JsonResult Index(string Prefix)
+        public JsonResult Text(string term)
         {
             List<City> ObjList = new List<City>()
             {
@@ -35,22 +37,45 @@ namespace appathon_component.Controllers
             Query qi = new Query();
             QueryString qstr = new QueryString();
             // Match match =. new Match();
-            qstr.query = "*"+ Prefix+ "*";
+            qstr.query = "*" + term + "*";
             qstr.default_field = "title";
             qi.query_string = qstr;
             searchModel.query = qi;
             string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["IndexName"].ToString(), "/", ConfigurationManager.AppSettings["search"].ToString(), "/");
-            var responce = ApiCall.apiCall(url, "POST", searchModel);
-            
+            var response = ApiCall.apiCall(url, "POST", searchModel);
 
+            var result = JsonConvert.DeserializeObject<SearchResponse>(response);
+            if (result == null)
+            {
+                // no result
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            if (result.hits != null)
+            {
+                if (result.hits.hits.Count() == 0)
+                {
+                    // no result
+                    return Json("", JsonRequestBehavior.AllowGet);
+                }
+                 var name = result.hits.hits.Select(x => new { Imagepath = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png", Name = x._source.title }).ToList();
+
+                //var name = result.hits.hits.Select(x => new
+                //{
+                //    id = x._source.title,
+                //    CountryName = x._source.title,
+                //    Logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"
+                //    // label = $"< a href = \"javascript:void(0);\" >< img src = \"\" width = \"50\" height = \"50\" />< span > " + x._source.title + "</ span ></ a > "
+                //}).ToList();
+                return Json(name, JsonRequestBehavior.AllowGet);
+
+            }
             // Searching records from list using LINQ query
-            var Name = (from N in ObjList
-                        where N.Name.ToLower().Contains(Prefix.ToLower())
-                        select new { N.Name });
-            //string url = string.Concat(ConfigurationManager.AppSettings["ApiBaseUrl"].ToString(), "/", ConfigurationManager.AppSettings["All"].ToString(), "/", prod.ProductName.ToLower());
-            //ApiCall.apiCall(url, "POST", request);
-
-            return Json(Name, JsonRequestBehavior.AllowGet);
+            //var Name = (from N in ObjList
+            //            where N.Name.ToLower().Contains(Prefix.ToLower())
+            //            select new { N.Name });
+            //return Json(Name, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
         public class City

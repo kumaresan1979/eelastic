@@ -24,23 +24,67 @@
     </div>
 }
 <script>
-    $("#Name").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: "/Search/Index",
-                type: "POST",
-                dataType: "json",
-                data: { Prefix: request.term },
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return { label: item.Name, value: item.Name };
-                    }))
+   
+            //$('#Name').autocomplete({
+            //    source: function (request, response) {
+            //        $.ajax({
+            //            url: "/Search/Text",
+            //            data: "{'term' :'" + request.term + "'}",
+            //            dataType: "json",
+            //            type: "POST",
+            //            contentType: "application/json; charset=utf-8",
+            //            success: function (data) {
+            //                response($.map(data.d, function (item) {
 
-                }
-            })
-        },
-        messages: {
-            noResults: "", results: ""
-        }
-    });
+            //                    return {
+            //                        CountryName: item.CountryName,
+            //                        Logo: item.Logo,
+            //                        json: item
+            //                    }
+            //                }))
+            //            },
+            //            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //                alert(textStatus);
+            //            }
+            //        });
+            //    },
+            //    focus: function (event, ui) {
+            //        // this is for when focus of autocomplete item 
+            //        $('#Name').val(ui.item.CountryName);
+            //        return false;
+            //    },
+            //    select: function (event, ui) {
+            //        // this is for when select autocomplete item
+            //        $('#Name').val(ui.item.CountryName);
+            //        return false;
+            //    }
+            //}).data("ui-autocomplete")._renderItem = function (ul, item) {
+            //    debugger;
+            //    // here return item for autocomplete text box, Here is the place 
+            //    // where we can modify data as we want to show as autocomplete item
+            //    return $("<li>")
+            //        .append("<a style='padding-left:40px; background-image:url(/CountryLogo/" + item.Logo + ");" +
+            //            "background-repeat:no-repeat;background-position:left center;' >" + item.CountryName + "</a>").appendTo(ul);
+            //};
+       
+        $("#Name").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Search/Text",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.Name };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+   
 </script>
